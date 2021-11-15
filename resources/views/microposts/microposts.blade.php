@@ -22,6 +22,10 @@
                             {!! Form::close() !!}
                         @endif
                     </div>
+                    <div>
+                         {{-- フォロー／アンフォローボタン --}}
+                         @include('favourites.favourite_button')
+                    </div>
                 </div>
             </li>
         @endforeach

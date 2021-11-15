@@ -11,7 +11,7 @@ class UsersController extends Controller
     public function index()
     {
         // ユーザ一覧をidの降順で取得
-        $users = User::orderBy('id', 'desc')->paginate(1);
+        $users = User::orderBy('id', 'desc')->paginate(10);
 
         // ユーザ一覧ビューでそれを表示
         return view('users.index', [
@@ -58,7 +58,6 @@ class UsersController extends Controller
             'users' => $followings,
         ]);
     }
-
     /**
      * ユーザのフォロワー一覧ページを表示するアクション。
      *
@@ -80,6 +79,24 @@ class UsersController extends Controller
         return view('users.followers', [
             'user' => $user,
             'users' => $followers,
+        ]);
+    }
+    // ユーザのお気に入り一覧ページを表示するアクション
+    public function favourites($id)
+    {
+        //$id(この中身はUserのid)から、Userインスタンスを取得する
+        $user =User::FindOrFail($id);
+        
+        //$id(この中身はUserのid)から、Userインスタンスを取得する
+        $user->loadRelationshipCounts();
+        
+        //取得したユーザーのお気に入り投稿一覧を取得する
+        $favourites = $user->favourites()->orderBy('created_at', 'desc')->paginate(10);
+        
+        //ビュー側で表示する(第一引数に表示したいviewを指定。第二引数にはそのViewに渡したいデータ配列を渡す)
+        return view('users.favourites', [
+            'user' => $user,
+            'microposts' => $favourites,  //お気に入りの一覧を引き渡す
         ]);
     }
 }
